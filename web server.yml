@@ -1,0 +1,30 @@
+#nginx.yml
+---
+ - hosts: 192.168.56.3
+   user: root
+   tasks:
+    - name: Add epel-repo
+      yum:
+       name: epel-release
+       state: present
+
+    - name: Install Nginx
+      yum:
+       name: nginx
+       state: present
+
+    - name: add index.html file
+      template:
+       src: ./index.html
+       dest: /usr/share/nginx/html/index.html
+
+    - name: allow all access to tcp port 80
+      firewalld:
+       port: 80/tcp
+       zone: public
+       state: enabled
+
+    - name: Start Nginx
+      service:
+       name: nginx
+       state: started
